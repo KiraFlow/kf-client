@@ -1,10 +1,7 @@
 import ReactDOM from 'react-dom';
+import { App } from './App';
+import './main.css';
+import {store} from "./state";
+import {Provider} from "react-redux";
 
-const App = () => {
-  return <h1>Kira Flow Client Side template</h1>
-};
-
-ReactDOM.render(
-  <App/>,
-  document.querySelector('#root')
-);
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.querySelector('#root'));

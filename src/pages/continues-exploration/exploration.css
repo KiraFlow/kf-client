@@ -1,0 +1,8 @@
+.exploration-drop {
+    min-height: 85vh;
+}
+
+div[class*="us"] {
+    display: flex;
+    flex-direction: column;
+}

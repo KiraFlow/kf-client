@@ -1,0 +1,67 @@
+
+
+.board {
+  display: block !important;
+  white-space: nowrap;
+}
+
+.tasks-list {
+  display: inline-block !important;
+  width: 22rem;
+  margin-right: 30px !important;
+}
+
+.control-bar {
+  padding-bottom: 12px;
+}
+
+.user-defined-list {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+}
+
+.list-title {
+  padding: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-top: 10%;
+}
+
+.list-menu button {
+  float: right;
+}
+
+.done-list {
+  position: absolute;
+  right: 0;
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width: 1399px) {
+  .done-list {
+    position: relative;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .ustories {
+    max-height: 78vh;
+  }
+
+  .board {
+    display: block !important;
+    white-space: nowrap;
+  }
+
+  .tasks-list {
+    display: inline-block !important;
+    width: 22rem;
+    padding: 0 1rem 1rem 1rem;
+    border: 1px solid #eef2f7;
+    vertical-align: top;
+    margin-bottom: 24px;
+    border-radius: 0.25rem;
+  }
+}

@@ -1,0 +1,26 @@
+.left-nav-root {
+  width: 100%;
+  max-width: 360px;
+  background: #313a46;
+  color: #cedce4;
+}
+
+.left-nav-root span, div {
+  font-size: .9375rem;
+
+}
+
+.left-nav-root svg {
+  display: inline-block;
+    line-height: 1.0625rem;
+    margin: 0 10px 0 0;
+    font-size: 1.1rem;
+    vertical-align: middle;
+    width: 20px;
+    color: #cedce4;
+
+}
+
+.nav-title {
+  color: #cedce4!important;
+}

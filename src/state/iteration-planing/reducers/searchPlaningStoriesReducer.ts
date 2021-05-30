@@ -1,0 +1,30 @@
+import {SearchPlaningStoriesActionType} from '../action-types';
+import {SearchAction} from '../actions';
+import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
+
+interface PlaningStoriesState {
+    loading: boolean;
+    error: string | null;
+    data: UserStoryInterface[];
+}
+
+const initialState = {
+    loading: false,
+    error: null,
+    data: []
+}
+
+const reducer = (state: PlaningStoriesState = initialState, action: SearchAction): PlaningStoriesState => {
+    switch (action.type) {
+        case SearchPlaningStoriesActionType.SEARCH_PLANING_STORIES:
+            return {loading: true, error: null, data: []}
+        case SearchPlaningStoriesActionType.SEARCH_PLANING_STORIES_SUCCESS:
+            return {loading: false, error: null, data: action.payload}
+        case SearchPlaningStoriesActionType.SEARCH_PLANING_STORIES_ERROR:
+            return {loading: false, error: action.payload, data: []}
+        default:
+            return state;
+    }
+};
+
+export default reducer;

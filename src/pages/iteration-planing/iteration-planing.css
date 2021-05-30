@@ -1,0 +1,182 @@
+.tasks {
+  display: inline-block;
+  width: 100%;
+  padding: 0 1rem 1rem 1rem;
+  border: 1px solid #eef2f7;
+  vertical-align: top;
+  border-radius: 0.25rem;
+  border: none;
+}
+
+.tasks .task-header {
+  background-color: #f1f3fa;
+  padding: 1rem;
+  margin: 0 -1rem;
+}
+
+.task-list-items {
+  min-height: 100px;
+  position: relative;
+}
+
+.task-list-items:before {
+  content: 'No Tasks';
+  position: absolute;
+  line-height: 110px;
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+}
+
+.row {
+  margin-right: -12px;
+  margin-left: -12px;
+}
+
+.left-block,
+.right-block,
+.up-block,
+.down-block {
+  min-height: 20vh;
+  max-height: 50vh;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.drop {
+  overflow-y: auto;
+  min-height: 20vh;
+  max-height: 46vh;
+  width: 100%;
+}
+
+.row {
+  position: relative;
+}
+
+.left-block {
+  border-right: none;
+  border-bottom: none;
+  position: relative;
+  margin-top: 30px !important;
+}
+
+.right-block {
+  border-bottom: none;
+  margin-top: 30px !important;
+}
+
+.up-block {
+  border-right: none;
+  position: relative;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.d-md-block {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .d-md-block {
+    display: block !important;
+  }
+}
+
+.hc {
+  display: none;
+  position: absolute;
+  text-align: center !important;
+  width: 50%;
+}
+
+.lc {
+  display: none;
+  position: absolute;
+  left: 70%;
+}
+.hv {
+  display: none;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: -19px;
+  top: 38%;
+  text-align: center;
+  transform: rotate(-90deg);
+}
+
+.lv {
+  display: none;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: -19px;
+  top: 47%;
+  text-align: center;
+  transform: rotate(-90deg);
+}
+
+.tasksDrag {
+  display: block !important;
+}
+
+.ustories {
+  max-height: 95vh;
+}
+
+.stories-list {
+  overflow-y: auto;
+}
+
+@media screen and (min-width: 900px) {
+  .drop-x {
+    min-height: 85vh;
+  }
+
+  .drop-v {
+    min-height: 100%;
+
+  }
+
+  div[class*='us'] {
+    display: flex;
+    flex-direction: column;
+    padding: 7px 22px 0px 22px;
+  }
+  .under-drop {
+    padding-top: 30px !important;
+  }
+  .tasks {
+    margin-right: 1.25rem;
+  }
+
+  .left-block {
+    border-right: 0.5px solid #333333;
+    border-bottom: 0.5px solid #333333;
+  }
+
+  .right-block {
+    border-bottom: 0.5px solid #333333;
+  }
+
+  .up-block {
+    border-right: 0.5px solid #333333;
+  }
+
+  .usg {
+    padding-left: 15px !important;
+  }
+
+  .hv,
+  .lc,
+  .lv,
+  .hc {
+    display: block;
+  }
+  .tasksDrag {
+    display: none !important;
+  }
+}
