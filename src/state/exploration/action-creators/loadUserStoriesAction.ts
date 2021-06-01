@@ -9,17 +9,11 @@ export const loadUserStories = () => {
             type: LoadUserStoriesActionType.LOAD_USER_STORIES
         });
         try {
-            const {data} = await axios.get('https://registry.npmjs.org/-/v1/search', {
-                params: {
-                    text: 'react'
-                }
-            });
-            const names = data.objects.map((result: any) => {
-                return result.package.name;
-            });
+            const {data} = await axios.get('http://localhost:8080/exploration/get')
+
             dispatch({
                 type: LoadUserStoriesActionType.LOAD_USER_STORIES_SUCCESS,
-                payload: names
+                payload: data
             })
         } catch (err) {
             dispatch({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -15,7 +15,13 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import {useDispatch} from "react-redux";
+import {useEffect} from "react";
+import {useActions} from "../../../hooks/useActions";
+import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './storyDialog.css';
+import {createUserStory} from "../../../state/exploration/action-creators/createUserStoryAction";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -84,21 +90,39 @@ const DialogActions = withStyles((theme: Theme) => ({
 }))(MuiDialogActions);
 
 export default function StoryDialog() {
-  // getModalStyle is not a pure function, we roll the style only on the first render
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
-  const [age, setAge] = React.useState('');
+  const [title, setTitle] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [estimation, setEstimation] = React.useState(1);
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setAge(event.target.value as string);
-  };
 
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    console.log('fuf');
     setOpen(false);
+  };
+
+  const { createUserStory } = useActions();
+  const { data, error, loading } = useTypedSelector((state: any) => state.createUserStory);
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    createUserStory({
+      _id: '',
+      creationDate: new Date(),
+      listIndex: 0,
+      position: 0,
+      title: title,
+      description: description,
+      estimation: estimation
+    });
+
+    setOpen(false);
+
   };
 
   const body = (
@@ -109,6 +133,7 @@ export default function StoryDialog() {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
+      <form onSubmit={onSubmit}>
       <DialogTitle id="customized-dialog-title" onClose={handleClose}>
         <span className={"modal-title"}>Create a new User Story</span>
       </DialogTitle>
@@ -118,6 +143,8 @@ export default function StoryDialog() {
             <div className={'form-group'}>
               <label>User Story</label>
               <input
+                  value={title}
+                  onChange={(e) => setTitle( e.target.value)}
                 type="text"
                 name="title"
                 placeholder="Enter user story"
@@ -128,14 +155,17 @@ export default function StoryDialog() {
           </Grid>
           <Grid item xs={12} sm={4}>
             <div className="form-group">
-              <label>Priority</label>
+              <label>Estimation</label>
               <select
+                  value={estimation} onChange={(e) => setEstimation(parseInt(e.target.value))}
                 className="form-control form-control-light"
                 id="task-priority2"
               >
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
               </select>
             </div>
           </Grid>
@@ -143,11 +173,13 @@ export default function StoryDialog() {
             <div className="form-group">
               <label>Description</label>
               <textarea
-                className="form-control form-control-light story-description"
-                id="task-description"
-                rows={3}
-                cols={5}
-              ></textarea>
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+    className="form-control form-control-light story-description"
+    id="task-description"
+    rows={3}
+    cols={5}
+    />
             </div>
           </Grid>
         </Grid>
@@ -162,12 +194,13 @@ export default function StoryDialog() {
         </button>
         <button
           className={'btn btn-primary'}
-          onClick={handleClose}
+          type="submit" value="Submit"
           color="primary"
         >
           Subscribe
         </button>
       </DialogActions>
+      </form>
     </Dialog>
   );
 

@@ -12,46 +12,75 @@ import './iteration-planing.css';
 
 const userStoriesDummyData: UserStoryInterface[] = [
   {
-    id: 'gary',
+    _id: 'gary',
     title: 'Gary Goodspeed',
     position: 0,
-    listIndex: 0
+    listIndex: 0,
+    estimation: 1,
+    creationDate: new Date(),
+    description: 'de'
+
   },
   {
-    id: 'cato',
+    _id: 'cato',
     title: 'Little Cato',
     position: 1,
-    listIndex: 0
+    listIndex: 0,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
   },
   {
-    id: 'kvn',
+    _id: 'kvn',
     title: 'KVN',
     position: 2,
-    listIndex: 0
+    listIndex: 0,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
   },
   {
-    id: 'mooncake',
+    _id: 'mooncake',
     title: 'Mooncake',
     position: 3,
-    listIndex: 0
+    listIndex: 0,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
   },
   {
-    id: 'hello',
+    _id: 'hello',
     title: 'hello now',
     position: 4,
-    listIndex: 0
+    listIndex: 0,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
   },
   {
-    id: 'brow',
+    _id: 'brow',
     title: 'brown',
     position: 0,
-    listIndex: 1
+    listIndex: 1,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
+
   },
   {
-    id: 'cow',
+    _id: 'cow',
     title: 'cow',
     position: 1,
-    listIndex: 1
+    listIndex: 1,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
   }
 
 ];
@@ -60,10 +89,14 @@ const userStoriesDummyData: UserStoryInterface[] = [
 const whatever: UserStoryInterface[] = [
 
   {
-    id: 'sixsix',
+    _id: 'sixsix',
     title: 'KVN',
     position: 2,
-    listIndex: 0
+    listIndex: 0,
+    creationDate: new Date(),
+    estimation: 1,
+    description: 'de'
+
   }
 ];
 
@@ -173,9 +206,9 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
-                    {state.usx.map(({ id, title }, index) => {
+                    {state.usx.map(({_id, title }, index) => {
                       return (
-                        <Draggable key={id} draggableId={id} index={index}>
+                        <Draggable key={_id} draggableId={_id} index={index}>
                           {(provided) => (
                             <span
                               ref={provided.innerRef}
@@ -222,9 +255,9 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                     >
-                      {state.us0.map(({ id, title }, index) => {
+                      {state.us0.map(({_id, title }, index) => {
                         return (
-                          <Draggable key={id} draggableId={id} index={index}>
+                          <Draggable key={_id} draggableId={_id} index={index}>
                             {(provided) => (
                               <span
                                 ref={provided.innerRef}
@@ -263,9 +296,9 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                     >
-                      {state.us1.map(({ id, title }, index) => {
+                      {state.us1.map(({_id, title }, index) => {
                         return (
-                          <Draggable key={id} draggableId={id} index={index}>
+                          <Draggable key={_id} draggableId={_id} index={index}>
                             {(provided) => (
                               <span
                                 ref={provided.innerRef}
@@ -305,9 +338,9 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                     >
-                      {state.us2.map(({ id, title }, index) => {
+                      {state.us2.map(({_id, title }, index) => {
                         return (
-                          <Draggable key={id} draggableId={id} index={index}>
+                          <Draggable key={_id} draggableId={_id} index={index}>
                             {(provided) => (
                               <span
                                 ref={provided.innerRef}
@@ -344,9 +377,9 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                       {...provided.droppableProps}
                       ref={provided.innerRef}
                     >
-                      {state.us3.map(({ id, title }, index) => {
+                      {state.us3.map(({_id, title }, index) => {
                         return (
-                          <Draggable key={id} draggableId={id} index={index}>
+                          <Draggable key={_id} draggableId={_id} index={index}>
                             {(provided) => (
                               <span
                                 ref={provided.innerRef}
