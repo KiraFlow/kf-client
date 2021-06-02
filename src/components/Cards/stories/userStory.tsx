@@ -4,17 +4,17 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import NotesOutlinedIcon from '@material-ui/icons/NotesOutlined';
-import {UserStoryInterface} from "./UserStoryInterface";
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
+import {useActions} from "../../../hooks/useActions";
+import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './userStory.css';
-
-
-const options = ['Edit', 'Delete'];
-
-const ITEM_HEIGHT = 48;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,35 +35,49 @@ const useStyles = makeStyles((theme) => ({
         color: '#98a6ad!important',
         fontSize: '.75rem',
         fontWeight: 400
-    }
+    },
+    paper: {
+        marginRight: theme.spacing(2),
+    },
 }));
 
 interface UserStory {
     title: string;
+    id: string;
 }
 
 
-export const UserStory: React.FC<UserStory> = ({title}) => {
+export const UserStory: React.FC<UserStory> = ({title, id}) => {
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [open, setOpen] = React.useState(false);
+    const anchorRef = React.useRef<HTMLButtonElement>(null);
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
-
-    const open = Boolean(anchorEl);
-
-    const handleClick = (event: any) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const { deleteUserStory } = useActions();
+    const { data, error, loading } = useTypedSelector((state: any) => state.deleteUserStory);
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setOpen(false);
+    };
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleCardMenu = (event: any) => {
-        setAnchorEl(null);
+    const handleDelete = (event: React.MouseEvent<HTMLElement>, id: string) => {
+
+        deleteUserStory(id);
+        setOpen(false);
+    }
+
+    const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
+        console.log('edit');
+        setOpen(false);
+    }
+
+    function handleListKeyDown(event: React.KeyboardEvent) {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            setOpen(false);
+        }
     }
 
     return (
@@ -100,37 +114,31 @@ export const UserStory: React.FC<UserStory> = ({title}) => {
 
                 <IconButton
                     className='menuButton'
-                    aria-label="more"
-                    aria-controls="long-menu"
+                    ref={anchorRef}
+                    aria-controls={open ? 'menu-list-grow' : undefined}
                     aria-haspopup="true"
-                    onClick={handleClick}
+                    onClick={handleToggle}
                 >
                     <MoreVertIcon/>
                 </IconButton>
-                <Menu
-                    id="long-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
-                        },
-                    }}
-                >
-                    {options.map((option) => (
-                        <MenuItem
-                            key={option}
-                            selected={option === 'Pyxis'}
-                            onClick={handleCardMenu}
-                            className={'menuOption'}
+
+                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                    {({TransitionProps, placement}) => (
+                        <Grow
+                            {...TransitionProps}
+                            style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
                         >
-                            {option}
-                        </MenuItem>
-                    ))}
-                </Menu>
+                            <Paper>
+                                <ClickAwayListener onClickAway={handleClose}>
+                                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                                        <MenuItem onClick={(e) => handleDelete(e, id)}>Delete</MenuItem>
+                                    </MenuList>
+                                </ClickAwayListener>
+                            </Paper>
+                        </Grow>
+                    )}
+                </Popper>
 
             </CardActions>
         </div>

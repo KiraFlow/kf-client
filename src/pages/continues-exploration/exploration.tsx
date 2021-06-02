@@ -135,7 +135,7 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title}/>
+                            <UserStory title={title} id={_id}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -164,7 +164,7 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title}/>
+                            <UserStory title={title} id={_id}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -193,7 +193,7 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title}/>
+                            <UserStory title={title} id={_id}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -222,7 +222,7 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title}/>
+                            <UserStory title={title} id={_id}/>
                           </span>
                                                 )}
                                             </Draggable>

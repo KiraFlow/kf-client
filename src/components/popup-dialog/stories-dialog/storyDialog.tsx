@@ -15,28 +15,9 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
 import {useActions} from "../../../hooks/useActions";
-import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './storyDialog.css';
-import {createUserStory} from "../../../state/exploration/action-creators/createUserStoryAction";
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
 
 const styles = (theme: Theme) =>
   createStyles({

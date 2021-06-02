@@ -215,7 +215,7 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <UserStory title={title} />
+                            <UserStory title={title} id={_id}/>
                             </span>
                           )}
                         </Draggable>
@@ -264,7 +264,7 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <UserStory title={title}/>
+                            <UserStory title={title} id={_id}/>
                               </span>
                             )}
                           </Draggable>
@@ -305,7 +305,7 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <UserStory title={title} />
+                            <UserStory title={title} id={_id}/>
                               </span>
                             )}
                           </Draggable>
@@ -347,7 +347,7 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <UserStory title={title} />
+                            <UserStory title={title} id={_id}/>
                               </span>
                             )}
                           </Draggable>
@@ -386,7 +386,7 @@ const statenUserStories = (data: UserStoryInterface[]) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <UserStory title={title} />
+                            <UserStory title={title} id={_id}/>
                               </span>
                             )}
                           </Draggable>

@@ -164,7 +164,7 @@ const ITEM_HEIGHT = 48;
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <UserStory title={title}  />
+                            <UserStory title={title} id={id}/>
                             </span>
                           )}
                         </Draggable>
@@ -237,7 +237,7 @@ const ITEM_HEIGHT = 48;
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <UserStory title={title}  />
+                            <UserStory title={title} id={id}/>
                             </span>
                           )}
                         </Draggable>
@@ -281,7 +281,7 @@ const ITEM_HEIGHT = 48;
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <UserStory title={title} />
+                            <UserStory title={title} id={id}/>
                             </span>
                           )}
                         </Draggable>
