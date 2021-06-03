@@ -1,6 +1,5 @@
 import {CreateUserStoryTypes} from '../action-types';
 import {CreateAction} from '../actions';
-import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
 
 interface UserStoriesState {
     loading: boolean;

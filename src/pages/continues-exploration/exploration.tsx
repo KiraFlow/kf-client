@@ -9,6 +9,7 @@ import {useActions} from "../../hooks/useActions";
 import {UserStoryInterface} from "../../components/Cards/stories/UserStoryInterface";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import './exploration.css';
+import {UpdateStoryDialog} from "../../components/popup-dialog/stories-dialog/updateStoryDialog";
 
 const useFetching = () => {
 
@@ -49,19 +50,20 @@ const statenUserStories = (data: UserStoryInterface[]) => {
 
 export const Exploration = () => {
 
+
     const {data, error, loading} = useTypedSelector((state: any) => state.loadUserStories);
 
+    const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
+    const [storyToUpdate, setStoryToUpdate] = React.useState<UserStoryInterface>();
 
 
-        const userStories = statenUserStories(data);
-        const [state, setState] = useState({
-            'us0': userStories['us0'],
-            'us1': userStories['us1'],
-            'us2': userStories['us2'],
-            'us3': userStories['us3']
-        });
-
-        console.log(data[0]);
+    const userStories = statenUserStories(data);
+    const [state, setState] = useState({
+        'us0': userStories['us0'],
+        'us1': userStories['us1'],
+        'us2': userStories['us2'],
+        'us3': userStories['us3']
+    });
 
     useFetching();
 
@@ -94,9 +96,20 @@ export const Exploration = () => {
         }
 
     }
+
+
+    const handleStoryEdit = (userStory: UserStoryInterface) => {
+        setOpenUpdateDialog(true);
+        setStoryToUpdate(userStory);
+    }
+
+    const handleDialogClose = () => {
+        setStoryToUpdate(undefined);
+        setOpenUpdateDialog(false);
+    }
+
+
     return (
-
-
         <>
             <Grid container spacing={3}>
                 <Grid item xs={6}>
@@ -104,6 +117,11 @@ export const Exploration = () => {
                 </Grid>
 
                 <Grid item xs={6}>
+
+                    {storyToUpdate &&
+                    <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}/>
+                    }
+
                     <StoryDialog/>
                 </Grid>
             </Grid>
@@ -126,16 +144,17 @@ export const Exploration = () => {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {userStories.us0.map(({_id, title}: any, index: number) => {
+                                    {userStories.us0.map((userStory: UserStoryInterface, index: number) => {
                                         return (
-                                            <Draggable key={_id} draggableId={_id} index={index}>
+                                            <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                 {(provided) => (
                                                     <span
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title} id={_id}/>
+                            <UserStory title={userStory.title} id={userStory._id}
+                                       handleEdit={() => handleStoryEdit(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -155,16 +174,17 @@ export const Exploration = () => {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {userStories.us1.map(({_id, title}, index) => {
+                                    {userStories.us1.map((userStory: UserStoryInterface, index) => {
                                         return (
-                                            <Draggable key={_id} draggableId={_id} index={index}>
+                                            <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                 {(provided) => (
                                                     <span
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title} id={_id}/>
+                            <UserStory title={userStory.title} id={userStory._id}
+                                       handleEdit={() => handleStoryEdit(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -184,16 +204,17 @@ export const Exploration = () => {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {userStories.us2.map(({_id, title}, index) => {
+                                    {userStories.us2.map((userStory: UserStoryInterface, index) => {
                                         return (
-                                            <Draggable key={_id} draggableId={_id} index={index}>
+                                            <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                 {(provided) => (
                                                     <span
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title} id={_id}/>
+                            <UserStory title={userStory.title} id={userStory._id}
+                                       handleEdit={() => handleStoryEdit(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -213,16 +234,17 @@ export const Exploration = () => {
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {userStories.us3.map(({_id, title}, index) => {
+                                    {userStories.us3.map((userStory: UserStoryInterface, index) => {
                                         return (
-                                            <Draggable key={_id} draggableId={_id} index={index}>
+                                            <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                 {(provided) => (
                                                     <span
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={title} id={_id}/>
+                            <UserStory title={userStory.title} id={userStory._id}
+                                       handleEdit={() => handleStoryEdit(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>

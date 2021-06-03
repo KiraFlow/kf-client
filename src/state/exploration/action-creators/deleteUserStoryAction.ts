@@ -2,7 +2,6 @@ import axios from 'axios';
 import {DeleteUserStoryTypes} from '../action-types';
 import {DeleteAction} from '../actions';
 import {Dispatch} from 'redux';
-import {stringify} from "querystring";
 
 export const deleteUserStory = (userStoryId: string) => {
     return async (dispatch: Dispatch<DeleteAction>) => {

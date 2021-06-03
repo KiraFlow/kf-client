@@ -44,13 +44,14 @@ const useStyles = makeStyles((theme) => ({
 interface UserStory {
     title: string;
     id: string;
+    handleEdit: () => void;
 }
 
-
-export const UserStory: React.FC<UserStory> = ({title, id}) => {
+export const UserStory: React.FC<UserStory> = ({title, id, handleEdit}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
+
 
     const { deleteUserStory } = useActions();
     const { data, error, loading } = useTypedSelector((state: any) => state.deleteUserStory);
@@ -63,15 +64,13 @@ export const UserStory: React.FC<UserStory> = ({title, id}) => {
     };
 
     const handleDelete = (event: React.MouseEvent<HTMLElement>, id: string) => {
-
         deleteUserStory(id);
         setOpen(false);
     }
 
-    const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
-        console.log('edit');
-        setOpen(false);
-    }
+    // const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
+    //     setOpen(false);
+    // }
 
     function handleListKeyDown(event: React.KeyboardEvent) {
         if (event.key === 'Tab') {
@@ -80,8 +79,13 @@ export const UserStory: React.FC<UserStory> = ({title, id}) => {
         }
     }
 
+   const handleEditClick = () => {
+        setOpen(false);
+        handleEdit();
+    }
+
     return (
-        <div className='card'>
+            <div className='card'>
             <CardContent>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
@@ -131,7 +135,7 @@ export const UserStory: React.FC<UserStory> = ({title, id}) => {
                             <Paper>
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                                        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                                        <MenuItem onClick={handleEditClick}>Edit</MenuItem>
                                         <MenuItem onClick={(e) => handleDelete(e, id)}>Delete</MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>

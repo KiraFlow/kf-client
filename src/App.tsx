@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Homepage } from './pages/homepage/homepage';
 import {Exploration} from './pages/continues-exploration/exploration';
-import {IterationPlaning} from './pages/iteration-planing/iteration-planing';
 import { Layout } from './components/layout/layout';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
@@ -33,7 +32,6 @@ export const App = () => {
         <Router>
           <Route exact path="/" component={Homepage} />
           <Route exact path="/exploration" component={Exploration} />
-          <Route exact path="/planing" component={IterationPlaning} />
         </Router>
       </Layout>
     </ThemeProvider>

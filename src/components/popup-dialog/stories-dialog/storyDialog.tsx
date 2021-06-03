@@ -76,7 +76,6 @@ export default function StoryDialog() {
   const [description, setDescription] = React.useState('');
   const [estimation, setEstimation] = React.useState(1);
 
-
   const handleOpen = () => {
     setOpen(true);
   };
