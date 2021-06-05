@@ -10,6 +10,7 @@ import {UserStoryInterface} from "../../components/Cards/stories/UserStoryInterf
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import './exploration.css';
 import {UpdateStoryDialog} from "../../components/popup-dialog/stories-dialog/updateStoryDialog";
+import {ShowStoryDialog} from "../../components/popup-dialog/stories-dialog/showStoryDialog";
 
 const useFetching = () => {
 
@@ -56,6 +57,9 @@ export const Exploration = () => {
     const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
     const [storyToUpdate, setStoryToUpdate] = React.useState<UserStoryInterface>();
 
+    const [openShowDialog, setOpenShowDialog] = React.useState(false);
+    const [storyToShow, setStoryToShow] = React.useState<UserStoryInterface>();
+
 
     const userStories = statenUserStories(data);
     const [state, setState] = useState({
@@ -99,13 +103,23 @@ export const Exploration = () => {
 
 
     const handleStoryEdit = (userStory: UserStoryInterface) => {
-        setOpenUpdateDialog(true);
         setStoryToUpdate(userStory);
+        setOpenUpdateDialog(true);
     }
 
     const handleDialogClose = () => {
         setStoryToUpdate(undefined);
         setOpenUpdateDialog(false);
+    }
+
+    const handleShowStory = (userStory: UserStoryInterface) => {
+        setStoryToShow(userStory);
+        setOpenShowDialog(true);
+    }
+
+    const handleShowCloseDialog = () => {
+        setStoryToShow(undefined);
+        setOpenShowDialog(false);
     }
 
 
@@ -120,6 +134,10 @@ export const Exploration = () => {
 
                     {storyToUpdate &&
                     <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}/>
+                    }
+
+                    {storyToShow &&
+                    <ShowStoryDialog isOpen={openShowDialog} story={storyToShow} handleClose={handleShowCloseDialog}/>
                     }
 
                     <StoryDialog/>
@@ -153,8 +171,8 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={userStory.title} id={userStory._id}
-                                       handleEdit={() => handleStoryEdit(userStory)}/>
+                            <UserStory story={userStory}
+                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -183,8 +201,8 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={userStory.title} id={userStory._id}
-                                       handleEdit={() => handleStoryEdit(userStory)}/>
+                            <UserStory story={userStory}
+                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -213,8 +231,8 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={userStory.title} id={userStory._id}
-                                       handleEdit={() => handleStoryEdit(userStory)}/>
+                            <UserStory story={userStory}
+                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>
@@ -243,8 +261,8 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory title={userStory.title} id={userStory._id}
-                                       handleEdit={() => handleStoryEdit(userStory)}/>
+                            <UserStory story={userStory}
+                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
                           </span>
                                                 )}
                                             </Draggable>

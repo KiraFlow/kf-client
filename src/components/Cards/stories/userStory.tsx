@@ -15,6 +15,8 @@ import MenuList from '@material-ui/core/MenuList';
 import {useActions} from "../../../hooks/useActions";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './userStory.css';
+import {store} from "../../../state";
+import {UserStoryInterface} from "./UserStoryInterface";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,19 +44,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface UserStory {
-    title: string;
-    id: string;
+    story: UserStoryInterface;
     handleEdit: () => void;
+    handleShow: () => void;
 }
 
-export const UserStory: React.FC<UserStory> = ({title, id, handleEdit}) => {
+export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
 
-    const { deleteUserStory } = useActions();
-    const { data, error, loading } = useTypedSelector((state: any) => state.deleteUserStory);
+    const {deleteUserStory} = useActions();
+    const {data, error, loading} = useTypedSelector((state: any) => state.deleteUserStory);
 
     const handleClose = () => {
         setOpen(false);
@@ -68,10 +70,6 @@ export const UserStory: React.FC<UserStory> = ({title, id, handleEdit}) => {
         setOpen(false);
     }
 
-    // const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
-    //     setOpen(false);
-    // }
-
     function handleListKeyDown(event: React.KeyboardEvent) {
         if (event.key === 'Tab') {
             event.preventDefault();
@@ -79,26 +77,32 @@ export const UserStory: React.FC<UserStory> = ({title, id, handleEdit}) => {
         }
     }
 
-   const handleEditClick = () => {
+    const handleEditClick = () => {
         setOpen(false);
         handleEdit();
     }
 
+    const creation = new Date(story.creationDate).toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
+
     return (
-            <div className='card'>
+        <div className='card'>
             <CardContent>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <span className='badge badge-danger'>5</span>
+                        <span className='badge badge-danger'>{story.estimation}</span>
                     </Grid>
 
                     <Grid item xs={6}>
-                        <div className={classes.cardDate}>Jan. 11, 2021</div>
+                        <div className={classes.cardDate}>{creation}</div>
                     </Grid>
                 </Grid>
 
                 <div className={classes.title}>
-                    {title}
+                    <span className={'cardTitle'} onClick={handleShow}>{story.title}</span>
                 </div>
 
             </CardContent>
@@ -108,8 +112,9 @@ export const UserStory: React.FC<UserStory> = ({title, id, handleEdit}) => {
 
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <NotesOutlinedIcon className={'includeParagraph'}/>
-
+                        {story.description &&
+                            <NotesOutlinedIcon className={'includeParagraph'}/>
+                        }
                     </Grid>
 
                     <Grid item xs={6}>
@@ -136,7 +141,7 @@ export const UserStory: React.FC<UserStory> = ({title, id, handleEdit}) => {
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                                         <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                                        <MenuItem onClick={(e) => handleDelete(e, id)}>Delete</MenuItem>
+                                        <MenuItem onClick={(e) => handleDelete(e, story._id)}>Delete</MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>

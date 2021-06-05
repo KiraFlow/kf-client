@@ -37,3 +37,7 @@
 .menuOption {
   color: #6c757d!important;
 }
+
+.cardTitle {
+  cursor: pointer;
+}

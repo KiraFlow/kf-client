@@ -11,7 +11,15 @@ export const updateUserStory = (userStory: UserStoryInterface) => {
         });
         try {
             const {_id, title, description, estimation, creationDate, listIndex, position} = userStory
-            await axios.put('http://localhost:8080/exploration/put',  JSON.stringify({_id, title, description, estimation, creationDate, listIndex, position}), {
+            await axios.put('http://localhost:8080/exploration/put', JSON.stringify({
+                _id,
+                title,
+                description,
+                estimation,
+                creationDate,
+                listIndex,
+                position
+            }), {
                 headers: {
                     'Content-Type': 'application/json',
                 }
