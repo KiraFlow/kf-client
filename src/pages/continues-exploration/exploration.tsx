@@ -51,6 +51,12 @@ const statenUserStories = (data: UserStoryInterface[]) => {
 
 export const Exploration = () => {
 
+    const LIST_INDEX = {
+        'us0': 0,
+        'us1': 1,
+        'us2': 2,
+        'us3': 3
+    }
 
     const {data, error, loading} = useTypedSelector((state: any) => state.loadUserStories);
 
@@ -60,43 +66,77 @@ export const Exploration = () => {
     const [openShowDialog, setOpenShowDialog] = React.useState(false);
     const [storyToShow, setStoryToShow] = React.useState<UserStoryInterface>();
 
+    const {updateBoardAction} = useActions();
 
     const userStories = statenUserStories(data);
+
+
     const [state, setState] = useState({
-        'us0': userStories['us0'],
-        'us1': userStories['us1'],
-        'us2': userStories['us2'],
-        'us3': userStories['us3']
+        'reloadBoard': false
     });
 
     useFetching();
-
 
     function handleOnDragEnd(result: any) {
 
         if (!result.destination) return;
         const destination = result.destination;
         const source = result.source;
-
+        let board = null;
         if (destination.droppableId === source.droppableId) {
             // @ts-ignore
-            const sourceItems = Array.from(state[source.droppableId]);
+            const sourceItems = Array.from(userStories[source.droppableId]);
             const [sourceCell] = sourceItems.splice(result.source.index, 1);
             sourceItems.splice(result.destination.index, 0, sourceCell);
-            setState(state => ({...state, [destination.droppableId]: sourceItems}))
+            setState(state => ({'reloadBoard': true}));
+
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+                story.position = position
+            });
+
+            board = sourceItems;
+            updateBoardAction(board);
+
         } else {
             // @ts-ignore
-            const sourceItems = Array.from(state[source.droppableId]);
+            const sourceItems = Array.from(userStories[source.droppableId]);
             const [sourceCell] = sourceItems.splice(result.source.index, 1);
 
             // @ts-ignore
-            const destinationItems = Array.from(state[destination.droppableId]);
+            const destinationItems = Array.from(userStories[destination.droppableId]);
             destinationItems.splice(destination.index, 0, sourceCell);
-            setState(state => ({
-                ...state,
+            setState(state => ({'reloadBoard': true}));
+
+            board = ({
+                ...userStories,
                 [source.droppableId]: sourceItems,
                 [destination.droppableId]: destinationItems
-            }));
+            });
+
+
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+                story.position = position
+            });
+            try{
+                // @ts-ignore
+                const destinationList = LIST_INDEX[destination.droppableId]
+
+                // @ts-ignore
+                destinationItems.forEach(function (story: UserStoryInterface, position: number) {
+                    story.position = position
+                    story.listIndex = destinationList
+                });
+
+                board = sourceItems.concat(destinationItems);
+
+                if (!board) return;
+                updateBoardAction(board);
+
+            } catch (e) {
+                console.log(e);
+            }
         }
 
     }

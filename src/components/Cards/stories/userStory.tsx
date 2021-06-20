@@ -82,6 +82,11 @@ export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) 
         handleEdit();
     }
 
+    const handleShowClick = () => {
+        setOpen(false);
+        handleShow();
+    }
+
     const creation = new Date(story.creationDate).toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'short',
@@ -140,6 +145,7 @@ export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) 
                             <Paper>
                                 <ClickAwayListener onClickAway={handleClose}>
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                                        <MenuItem onClick={handleShowClick}>Show</MenuItem>
                                         <MenuItem onClick={handleEditClick}>Edit</MenuItem>
                                         <MenuItem onClick={(e) => handleDelete(e, story._id)}>Delete</MenuItem>
                                     </MenuList>
