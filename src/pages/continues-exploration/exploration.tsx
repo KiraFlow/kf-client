@@ -138,7 +138,6 @@ export const Exploration = () => {
                 console.log(e);
             }
         }
-
     }
 
 

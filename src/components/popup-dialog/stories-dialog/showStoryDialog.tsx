@@ -45,7 +45,6 @@ export const ShowStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, hand
     const theme = useTheme();
     const classes = useStyles();
 
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
 

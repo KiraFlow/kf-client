@@ -15,9 +15,8 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import {useActions} from "../../../hooks/useActions";
-import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './storyDialog.css';
+import axios from "../../../axios";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -85,13 +84,11 @@ export default function StoryDialog() {
     setOpen(false);
   };
 
-  const { createUserStory } = useActions();
-  const { data, error, loading } = useTypedSelector((state: any) => state.createUserStory);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    createUserStory({
+    const us = {
       _id: '',
       creationDate: new Date(),
       listIndex: 0,
@@ -99,7 +96,26 @@ export default function StoryDialog() {
       title: title,
       description: description,
       estimation: estimation
-    });
+    };
+
+    try {
+      const {title, description, estimation, creationDate, listIndex, position} = us;
+      await axios.post('/exploration/create', JSON.stringify({
+        title,
+        description,
+        estimation,
+        creationDate,
+        listIndex,
+        position
+      }), {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      console.log('success creating card');
+    } catch (err) {
+      console.log(`error creating card : ${err}`);
+    }
 
     setOpen(false);
 
@@ -153,13 +169,13 @@ export default function StoryDialog() {
             <div className="form-group">
               <label>Description</label>
               <textarea
-    value={description}
-    onChange={(e) => setDescription(e.target.value)}
-    className="form-control form-control-light story-description"
-    id="task-description"
-    rows={3}
-    cols={5}
-    />
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="form-control form-control-light story-description"
+                  id="task-description"
+                  rows={3}
+                  cols={5}
+                />
             </div>
           </Grid>
         </Grid>
@@ -177,7 +193,7 @@ export default function StoryDialog() {
           type="submit" value="Submit"
           color="primary"
         >
-          Subscribe
+          Create
         </button>
       </DialogActions>
       </form>

@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Modal from '@material-ui/core/Modal';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {
     createStyles,
@@ -15,10 +14,9 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import {useActions} from "../../../hooks/useActions";
-import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './storyDialog.css';
 import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import axios from '../../../axios';
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -83,13 +81,10 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
     const [description, setDescription] = React.useState(story.description);
     const [estimation, setEstimation] = React.useState(story.estimation);
 
-    const {updateUserStory} = useActions();
-    const {data, error, loading} = useTypedSelector((state: any) => state.updateUserStory);
 
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        updateUserStory({
+        const us = {
             _id: story._id,
             creationDate: new Date(),
             listIndex: story.listIndex,
@@ -97,13 +92,40 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
             title: title,
             description: description,
             estimation: estimation
-        });
+        }
+        // const x = dispatch(actionCreators.updateUserStory(
+        //    us
+        //))
 
-        handleClose();
+        try {
+            const {_id, title, description, estimation, creationDate, listIndex, position} = us
+
+            await axios.put('/exploration/put', JSON.stringify({
+                _id,
+                title,
+                description,
+                estimation,
+                creationDate,
+                listIndex,
+                position
+            }), {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then((r: any) => {
+                console.log('success');
+            })
+
+        } catch (err) {
+            console.log('error');
+        }
+
+
     };
 
 
     const body = (
+
         <Dialog
             fullWidth
             maxWidth="md"
@@ -111,6 +133,7 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
         >
+            success
             <form onSubmit={onSubmit}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     <span className={"modal-title"}>Update User Story</span>
@@ -183,15 +206,20 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
     );
 
     return (
-        <>
 
-            <Modal
+
+    <>
+
+        <Modal
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >
+
                 {body}
+
+
             </Modal>
         </>
     );

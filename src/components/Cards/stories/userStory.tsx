@@ -15,8 +15,8 @@ import MenuList from '@material-ui/core/MenuList';
 import {useActions} from "../../../hooks/useActions";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './userStory.css';
-import {store} from "../../../state";
 import {UserStoryInterface} from "./UserStoryInterface";
+import axios from "../../../axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,10 +54,6 @@ export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
 
-
-    const {deleteUserStory} = useActions();
-    const {data, error, loading} = useTypedSelector((state: any) => state.deleteUserStory);
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -65,8 +61,17 @@ export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) 
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleDelete = (event: React.MouseEvent<HTMLElement>, id: string) => {
-        deleteUserStory(id);
+    const handleDelete = async (event: React.MouseEvent<HTMLElement>, userStoryId: string) => {
+        try {
+            await axios.delete('/exploration/delete', {
+                data: {userStoryId},
+                headers: {"Content-Type": "Application/json"}
+            });
+
+
+        } catch (err) {
+            console.log(`error deleting card ${err}`);
+        }
         setOpen(false);
     }
 
