@@ -19,6 +19,7 @@ const useFetching = () => {
     useEffect(() => {
         loadUserStories();
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 }
@@ -31,19 +32,19 @@ const statenUserStories = (data: UserStoryInterface[]) => {
             return (prev > current) ? prev : current
         });
 
-        Array(maxListIndex + 1).fill(0).map((_, i) => {
+        Array(maxListIndex + 1).fill(0).map((_, i) => (
             data
                 .filter(x => x.listIndex === i)
                 .sort(function (a, b) {
                     return (a.position > b.position ? 1 : -1)
                 })
-                .map(x => {
+                .map((x) => (
 
                     // @ts-ignore
-                    res['us' + x.listIndex].push(x);
+                    res['us' + x.listIndex].push(x)
 
-                })
-        });
+                ))
+        ));
     }
 
     return res;
@@ -71,7 +72,7 @@ export const Exploration = () => {
     const userStories = statenUserStories(data);
 
 
-    const [state, setState] = useState({
+    const [, setState] = useState({
         'reloadBoard': false
     });
 
@@ -119,7 +120,7 @@ export const Exploration = () => {
             sourceItems.forEach(function (story: UserStoryInterface, position: number) {
                 story.position = position
             });
-            try{
+            try {
                 // @ts-ignore
                 const destinationList = LIST_INDEX[destination.droppableId]
 
@@ -210,9 +211,10 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory story={userStory}
-                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
-                          </span>
+                        <UserStory story={userStory}
+                                   handleEdit={() => handleStoryEdit(userStory)}
+                                   handleShow={() => handleShowStory(userStory)}/>
+                      </span>
                                                 )}
                                             </Draggable>
                                         );
@@ -240,9 +242,10 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory story={userStory}
-                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
-                          </span>
+                        <UserStory story={userStory}
+                                   handleEdit={() => handleStoryEdit(userStory)}
+                                   handleShow={() => handleShowStory(userStory)}/>
+                      </span>
                                                 )}
                                             </Draggable>
                                         );
@@ -270,9 +273,10 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory story={userStory}
-                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
-                          </span>
+                        <UserStory story={userStory}
+                                   handleEdit={() => handleStoryEdit(userStory)}
+                                   handleShow={() => handleShowStory(userStory)}/>
+                      </span>
                                                 )}
                                             </Draggable>
                                         );
@@ -300,9 +304,10 @@ export const Exploration = () => {
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                     >
-                            <UserStory story={userStory}
-                                       handleEdit={() => handleStoryEdit(userStory)} handleShow={() => handleShowStory(userStory)}/>
-                          </span>
+                        <UserStory story={userStory}
+                                   handleEdit={() => handleStoryEdit(userStory)}
+                                   handleShow={() => handleShowStory(userStory)}/>
+                      </span>
                                                 )}
                                             </Draggable>
                                         );

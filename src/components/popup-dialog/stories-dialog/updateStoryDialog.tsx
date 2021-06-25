@@ -93,9 +93,6 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
             description: description,
             estimation: estimation
         }
-        // const x = dispatch(actionCreators.updateUserStory(
-        //    us
-        //))
 
         try {
             const {_id, title, description, estimation, creationDate, listIndex, position} = us
@@ -198,7 +195,7 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
                         type="submit" value="Submit"
                         color="primary"
                     >
-                        Subscribe
+                        Update
                     </button>
                 </DialogActions>
             </form>
@@ -208,9 +205,9 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
     return (
 
 
-    <>
+        <>
 
-        <Modal
+            <Modal
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="simple-modal-title"

@@ -12,8 +12,6 @@ import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
-import {useActions} from "../../../hooks/useActions";
-import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import './userStory.css';
 import {UserStoryInterface} from "./UserStoryInterface";
 import axios from "../../../axios";
@@ -43,13 +41,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-interface UserStory {
+interface UserStoryProps {
     story: UserStoryInterface;
     handleEdit: () => void;
     handleShow: () => void;
 }
 
-export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) => {
+export const UserStory: React.FC<UserStoryProps> = ({story, handleEdit, handleShow}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -123,7 +121,7 @@ export const UserStory: React.FC<UserStory> = ({story, handleEdit, handleShow}) 
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         {story.description &&
-                            <NotesOutlinedIcon className={'includeParagraph'}/>
+                        <NotesOutlinedIcon className={'includeParagraph'}/>
                         }
                     </Grid>
 
