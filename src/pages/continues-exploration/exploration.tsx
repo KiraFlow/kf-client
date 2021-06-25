@@ -162,6 +162,22 @@ export const Exploration = () => {
         setOpenShowDialog(false);
     }
 
+    const handleAfterUpdate = (userStoryUpdated: UserStoryInterface) => {
+        const listIndexName = 'us'.concat(String(userStoryUpdated.listIndex));
+        // @ts-ignore
+        if (LIST_INDEX[listIndexName] !== undefined) {
+            // @ts-ignore
+            const sourceItems: UserStoryInterface[] = Array.from(userStories[listIndexName]);
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface) {
+                story.title = userStoryUpdated.title
+                story.description = userStoryUpdated.description
+                story.estimation = userStoryUpdated.estimation
+                story.creationDate = userStoryUpdated.creationDate
+            });
+        }
+    }
+
 
     return (
         <>
@@ -173,7 +189,8 @@ export const Exploration = () => {
                 <Grid item xs={6}>
 
                     {storyToUpdate &&
-                    <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}/>
+                    <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}
+                                       handleAfterUpdate={handleAfterUpdate}/>
                     }
 
                     {storyToShow &&

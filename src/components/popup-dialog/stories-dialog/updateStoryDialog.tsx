@@ -73,10 +73,11 @@ interface UpdateStoryProps {
     isOpen: boolean;
     story: UserStoryInterface;
     handleClose: () => void;
+    handleAfterUpdate: (us: { estimation: number; listIndex: number; description: string; _id: string; position: number; creationDate: Date; title: string }) => void;
 
 }
 
-export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, handleClose}) => {
+export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, handleClose, handleAfterUpdate}) => {
     const [title, setTitle] = React.useState(story.title);
     const [description, setDescription] = React.useState(story.description);
     const [estimation, setEstimation] = React.useState(story.estimation);
@@ -110,13 +111,15 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
                     'Content-Type': 'application/json',
                 }
             }).then((r: any) => {
-                console.log('success');
+                if (r.status === 200)
+                    handleAfterUpdate(us);
             })
 
         } catch (err) {
-            console.log('error');
+            console.log(`error updating the story ${err}`);
         }
 
+        handleClose();
 
     };
 
@@ -130,7 +133,6 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
         >
-            success
             <form onSubmit={onSubmit}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                     <span className={"modal-title"}>Update User Story</span>
