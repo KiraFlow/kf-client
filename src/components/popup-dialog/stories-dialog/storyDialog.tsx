@@ -113,6 +113,9 @@ export default function StoryDialog() {
                 }
             })
             console.log('success creating card');
+            setTitle('');
+            setDescription('');
+            setEstimation(1);
         } catch (err) {
             console.log(`error creating card : ${err}`);
         }

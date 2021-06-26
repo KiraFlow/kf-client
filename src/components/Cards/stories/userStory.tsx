@@ -45,9 +45,10 @@ interface UserStoryProps {
     story: UserStoryInterface;
     handleEdit: () => void;
     handleShow: () => void;
+    handleAfterDelete: (userStoryId: UserStoryInterface) => void;
 }
 
-export const UserStory: React.FC<UserStoryProps> = ({story, handleEdit, handleShow}) => {
+export const UserStory: React.FC<UserStoryProps> = ({story, handleEdit, handleShow, handleAfterDelete}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
@@ -59,11 +60,16 @@ export const UserStory: React.FC<UserStoryProps> = ({story, handleEdit, handleSh
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleDelete = async (event: React.MouseEvent<HTMLElement>, userStoryId: string) => {
+    const handleDelete = async (event: React.MouseEvent<HTMLElement>, deletedStory: UserStoryInterface) => {
         try {
+            const userStoryId = deletedStory._id;
             await axios.delete('/exploration/delete', {
                 data: {userStoryId},
                 headers: {"Content-Type": "Application/json"}
+            }).then((r: any) => {
+                if (r.status === 200 && r.data.deletedCount !== 0){
+                    handleAfterDelete(deletedStory);
+                }
             });
 
 
@@ -150,7 +156,7 @@ export const UserStory: React.FC<UserStoryProps> = ({story, handleEdit, handleSh
                                     <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                                         <MenuItem onClick={handleShowClick}>Show</MenuItem>
                                         <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                                        <MenuItem onClick={(e) => handleDelete(e, story._id)}>Delete</MenuItem>
+                                        <MenuItem onClick={(e) => handleDelete(e, story)}>Delete</MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>
