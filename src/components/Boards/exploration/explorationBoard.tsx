@@ -1,12 +1,12 @@
 import React, {useEffect, useReducer} from "react";
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import {UserStory} from "../Cards/stories/userStory";
+import {UserStory} from "../../Cards/stories/userStory";
 import Grid from '@material-ui/core/Grid';
-import {UserStoryInterface} from "../Cards/stories/UserStoryInterface";
-import {useActions} from "../../hooks/useActions";
-import {UpdateStoryDialog} from "../popup-dialog/stories-dialog/updateStoryDialog";
-import {ShowStoryDialog} from "../popup-dialog/stories-dialog/showStoryDialog";
-import {StoryDialog} from "../popup-dialog/stories-dialog/storyDialog";
+import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import {useActions} from "../../../hooks/useActions";
+import {UpdateStoryDialog} from "../../popup-dialog/stories-dialog/updateStoryDialog";
+import {ShowStoryDialog} from "../../popup-dialog/stories-dialog/showStoryDialog";
+import {StoryDialog} from "../../popup-dialog/stories-dialog/storyDialog";
 
 interface ExplorationBoardProps {
     userStoriesData: UserStoryInterface[];
@@ -204,14 +204,12 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({
         }
     }
 
-
     const handleUpdateCard = (story: UserStoryInterface, userStoryUpdated: UserStoryInterface) => {
         story.title = userStoryUpdated.title;
         story.description = userStoryUpdated.description;
         story.estimation = userStoryUpdated.estimation;
         story.creationDate = userStoryUpdated.creationDate;
     }
-
 
     const handleAfterUpdate = (userStoryUpdated: UserStoryInterface) => {
         const listIndexName = 'us'.concat(String(userStoryUpdated.listIndex));

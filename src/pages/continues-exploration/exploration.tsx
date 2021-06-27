@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import './exploration.css';
-import {ExplorationBoard} from "../../components/Boards/explorationBoard";
+import {ExplorationBoard} from "../../components/Boards/exploration/explorationBoard";
 import Button from "@material-ui/core/Button";
 
 const useFetching = () => {
