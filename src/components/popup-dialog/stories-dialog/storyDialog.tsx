@@ -1,6 +1,5 @@
 import React from 'react';
 import Modal from '@material-ui/core/Modal';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {
     createStyles,
@@ -17,6 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import './storyDialog.css';
 import axios from "../../../axios";
+import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -69,19 +69,23 @@ const DialogActions = withStyles((theme: Theme) => ({
     },
 }))(MuiDialogActions);
 
-export default function StoryDialog() {
-    const [open, setOpen] = React.useState(false);
+interface StoryDialogProps {
+    openCreationModal: boolean;
+    handleCloseCreationModal: () => void;
+    handleAfterCreation: (us: { estimation: number; listIndex: number; description: string; _id: string; position: number; creationDate: Date; title: string }) => void;
+}
+
+export const StoryDialog: React.FC<StoryDialogProps> = ({
+                                                            openCreationModal,
+                                                            handleCloseCreationModal,
+                                                            handleAfterCreation
+                                                        }) => {
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [estimation, setEstimation] = React.useState(1);
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
     const handleClose = () => {
-        console.log('fuf');
-        setOpen(false);
+        handleCloseCreationModal();
     };
 
 
@@ -111,24 +115,27 @@ export default function StoryDialog() {
                 headers: {
                     'Content-Type': 'application/json',
                 }
+            }).then((r: any) => {
+                if (r.status === 200) {
+                    const createdUserStory: UserStoryInterface = r.data;
+                    handleAfterCreation(createdUserStory);
+                    setTitle('');
+                    setDescription('');
+                    setEstimation(1);
+                }
             })
-            console.log('success creating card');
-            setTitle('');
-            setDescription('');
-            setEstimation(1);
+
         } catch (err) {
             console.log(`error creating card : ${err}`);
         }
-
-        setOpen(false);
-
+        handleCloseCreationModal();
     };
 
     const body = (
         <Dialog
             fullWidth
             maxWidth="md"
-            open={open}
+            open={openCreationModal}
             onClose={handleClose}
             aria-labelledby="form-dialog-title"
         >
@@ -205,16 +212,8 @@ export default function StoryDialog() {
 
     return (
         <>
-            <Button
-                variant="contained"
-                color="primary"
-                style={{float: 'right'}}
-                onClick={handleOpen}
-            >
-                Add New
-            </Button>
             <Modal
-                open={open}
+                open={openCreationModal}
                 onClose={handleClose}
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"

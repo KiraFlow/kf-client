@@ -6,9 +6,12 @@ import {UserStoryInterface} from "../Cards/stories/UserStoryInterface";
 import {useActions} from "../../hooks/useActions";
 import {UpdateStoryDialog} from "../popup-dialog/stories-dialog/updateStoryDialog";
 import {ShowStoryDialog} from "../popup-dialog/stories-dialog/showStoryDialog";
+import {StoryDialog} from "../popup-dialog/stories-dialog/storyDialog";
 
 interface ExplorationBoardProps {
     userStoriesData: UserStoryInterface[];
+    createNew: boolean;
+    handleCloseCreationModal: () => void;
 }
 
 
@@ -38,7 +41,7 @@ const statenUserStories = (data: UserStoryInterface[]) => {
     return res;
 };
 
-export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesData}) => {
+export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesData, createNew, handleCloseCreationModal}) => {
 
     const LIST_INDEX = {
         'us0': 0,
@@ -157,7 +160,6 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
             sourceItems.splice(deletedStory.position, 1);
             userStories[listIndexName] = sourceItems;
             setUserStories(userStories);
-            setReload(!reload);
         }
     }
 
@@ -171,6 +173,25 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
         setStoryToShow(undefined);
         setOpenShowDialog(false);
     }
+
+    const handleAfterCreation = (createdUserStory: UserStoryInterface) => {
+        const listIndexName = 'us'.concat(String(createdUserStory.listIndex));
+
+        // @ts-ignore
+        const sourceItems = Array.from(userStories[listIndexName]);
+
+        sourceItems.splice(0, 0, createdUserStory);
+
+        // @ts-ignore
+        sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+            story.position = position
+        });
+
+        userStories[listIndexName] = sourceItems;
+        setUserStories(userStories);
+    }
+
+
 
     const handleAfterUpdate = (userStoryUpdated: UserStoryInterface) => {
         const listIndexName = 'us'.concat(String(userStoryUpdated.listIndex));
@@ -195,13 +216,15 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
         <>
 
             {storyToUpdate &&
-            <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}
-                               handleAfterUpdate={handleAfterUpdate}/>
+                <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}
+                                   handleAfterUpdate={handleAfterUpdate}/>
             }
 
             {storyToShow &&
-            <ShowStoryDialog isOpen={openShowDialog} story={storyToShow} handleClose={handleShowCloseDialog}/>
+                <ShowStoryDialog isOpen={openShowDialog} story={storyToShow} handleClose={handleShowCloseDialog}/>
             }
+
+            <StoryDialog openCreationModal={createNew} handleCloseCreationModal={handleCloseCreationModal} handleAfterCreation={handleAfterCreation} />
 
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Grid item xs={12} lg={3} md={6} sm={6}>

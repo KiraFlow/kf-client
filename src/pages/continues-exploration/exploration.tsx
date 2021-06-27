@@ -1,15 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import StoryDialog from '../../components/popup-dialog/stories-dialog/storyDialog';
 import {useEffect} from "react";
 import {useActions} from "../../hooks/useActions";
-import {UserStoryInterface} from "../../components/Cards/stories/UserStoryInterface";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import './exploration.css';
-import {UpdateStoryDialog} from "../../components/popup-dialog/stories-dialog/updateStoryDialog";
-import {ShowStoryDialog} from "../../components/popup-dialog/stories-dialog/showStoryDialog";
 import {ExplorationBoard} from "../../components/Boards/explorationBoard";
+import Button from "@material-ui/core/Button";
 
 const useFetching = () => {
 
@@ -25,22 +22,16 @@ const useFetching = () => {
 
 export const Exploration = () => {
 
+    const [openCreateDialog, setOpenCreateDialog] = React.useState(false);
 
+
+    const handleCloseCreationModal = () => {
+        setOpenCreateDialog(false);
+    }
 
     const {data, error, loading} = useTypedSelector((state: any) => state.loadUserStories);
 
-    const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false);
-    const [storyToUpdate, setStoryToUpdate] = React.useState<UserStoryInterface>();
-
-    const [openShowDialog, setOpenShowDialog] = React.useState(false);
-    const [storyToShow, setStoryToShow] = React.useState<UserStoryInterface>();
-
-    const {updateBoardAction} = useActions();
-
-
     useFetching();
-
-
 
     return (
         <>
@@ -51,7 +42,15 @@ export const Exploration = () => {
 
                 <Grid item xs={6}>
 
-                    <StoryDialog/>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        style={{float: 'right'}}
+                        onClick={() => setOpenCreateDialog(true)}
+                    >
+                        Add New
+                    </Button>
+
                 </Grid>
             </Grid>
 
@@ -63,7 +62,7 @@ export const Exploration = () => {
 
                 {!error && !loading &&
 
-                    <ExplorationBoard userStoriesData={data}/>
+                    <ExplorationBoard userStoriesData={data} createNew={openCreateDialog} handleCloseCreationModal={handleCloseCreationModal}/>
 
                 }
             </Grid>
