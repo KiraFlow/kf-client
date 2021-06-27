@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer} from "react";
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {UserStory} from "../Cards/stories/userStory";
 import Grid from '@material-ui/core/Grid';
@@ -41,7 +41,11 @@ const statenUserStories = (data: UserStoryInterface[]) => {
     return res;
 };
 
-export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesData, createNew, handleCloseCreationModal}) => {
+export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({
+                                                                      userStoriesData,
+                                                                      createNew,
+                                                                      handleCloseCreationModal
+                                                                  }) => {
 
     const LIST_INDEX = {
         'us0': 0,
@@ -58,13 +62,12 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
 
     const [userStories, setUserStories] = React.useState<any>();
 
-    const [reload, setReload] = React.useState<boolean>();
-
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     const {updateBoardAction} = useActions();
 
     useEffect(() => {
-       const us = statenUserStories(userStoriesData);
+        const us = statenUserStories(userStoriesData);
         setUserStories(us);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,17 +155,6 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
         setOpenShowDialog(true);
     }
 
-    const handleDeleteStory = (deletedStory: UserStoryInterface) => {
-        const listIndexName = 'us'.concat(String(deletedStory.listIndex));
-        // @ts-ignore
-        if (LIST_INDEX[listIndexName] !== undefined) {
-            const sourceItems = Array.from(userStories[listIndexName]);
-            sourceItems.splice(deletedStory.position, 1);
-            userStories[listIndexName] = sourceItems;
-            setUserStories(userStories);
-        }
-    }
-
     const handleDialogClose = () => {
         setStoryToUpdate(undefined);
         setOpenUpdateDialog(false);
@@ -174,23 +166,51 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
         setOpenShowDialog(false);
     }
 
-    const handleAfterCreation = (createdUserStory: UserStoryInterface) => {
-        const listIndexName = 'us'.concat(String(createdUserStory.listIndex));
-
+    const handleDeleteStory = async (deletedStory: UserStoryInterface) => {
+        const listIndexName = 'us'.concat(String(deletedStory.listIndex));
         // @ts-ignore
-        const sourceItems = Array.from(userStories[listIndexName]);
+        if (LIST_INDEX[listIndexName] !== undefined) {
+            const sourceItems = Array.from(userStories[listIndexName]);
+            sourceItems.splice(deletedStory.position, 1);
 
-        sourceItems.splice(0, 0, createdUserStory);
-
-        // @ts-ignore
-        sourceItems.forEach(function (story: UserStoryInterface, position: number) {
-            story.position = position
-        });
-
-        userStories[listIndexName] = sourceItems;
-        setUserStories(userStories);
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+                story.position = position
+            });
+            userStories[listIndexName] = sourceItems;
+            await setUserStories(userStories);
+            forceUpdate();
+        }
     }
 
+
+    const handleAfterCreation = (createdUserStory: UserStoryInterface) => {
+        const listIndexName = 'us'.concat(String(createdUserStory.listIndex));
+        // @ts-ignore
+        if (LIST_INDEX[listIndexName] !== undefined) {
+
+            // @ts-ignore
+            const sourceItems = Array.from(userStories[listIndexName]);
+
+            sourceItems.splice(0, 0, createdUserStory);
+
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+                story.position = position
+            });
+
+            userStories[listIndexName] = sourceItems;
+            setUserStories(userStories);
+        }
+    }
+
+
+    const handleUpdateCard = (story: UserStoryInterface, userStoryUpdated: UserStoryInterface) => {
+        story.title = userStoryUpdated.title;
+        story.description = userStoryUpdated.description;
+        story.estimation = userStoryUpdated.estimation;
+        story.creationDate = userStoryUpdated.creationDate;
+    }
 
 
     const handleAfterUpdate = (userStoryUpdated: UserStoryInterface) => {
@@ -200,31 +220,26 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
             // @ts-ignore
             const sourceItems: UserStoryInterface[] = Array.from(userStories[listIndexName]);
             // @ts-ignore
-            sourceItems.filter((y) => y._id === userStoryUpdated._id).map((story: UserStoryInterface) => (
-                story.title = userStoryUpdated.title,
-                    story.description = userStoryUpdated.description,
-                    story.estimation = userStoryUpdated.estimation,
-                    story.creationDate = userStoryUpdated.creationDate
-            ));
+            sourceItems.filter((y) => y._id === userStoryUpdated._id).map((story: UserStoryInterface) => handleUpdateCard(story, userStoryUpdated));
             userStories[listIndexName] = sourceItems;
             setUserStories(userStories);
         }
     }
 
-
     return (
         <>
 
             {storyToUpdate &&
-                <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}
-                                   handleAfterUpdate={handleAfterUpdate}/>
+            <UpdateStoryDialog isOpen={openUpdateDialog} story={storyToUpdate} handleClose={handleDialogClose}
+                               handleAfterUpdate={handleAfterUpdate}/>
             }
 
             {storyToShow &&
-                <ShowStoryDialog isOpen={openShowDialog} story={storyToShow} handleClose={handleShowCloseDialog}/>
+            <ShowStoryDialog isOpen={openShowDialog} story={storyToShow} handleClose={handleShowCloseDialog}/>
             }
 
-            <StoryDialog openCreationModal={createNew} handleCloseCreationModal={handleCloseCreationModal} handleAfterCreation={handleAfterCreation} />
+            <StoryDialog openCreationModal={createNew} handleCloseCreationModal={handleCloseCreationModal}
+                         handleAfterCreation={handleAfterCreation}/>
 
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Grid item xs={12} lg={3} md={6} sm={6}>
@@ -239,24 +254,24 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
                                     userStories &&
 
                                     userStories.us0.map((userStory: UserStoryInterface, index: number) => {
-                                    return (
-                                        <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
-                                            {(provided) => (
-                                                <span
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                >
+                                        return (
+                                            <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
+                                                {(provided) => (
+                                                    <span
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
                         <UserStory story={userStory}
                                    handleEdit={() => handleStoryEdit(userStory)}
                                    handleShow={() => handleShowStory(userStory)}
                                    handleAfterDelete={handleDeleteStory}
                         />
                       </span>
-                                            )}
-                                        </Draggable>
-                                    );
-                                })}
+                                                )}
+                                            </Draggable>
+                                        );
+                                    })}
                                 {provided.placeholder}
                             </div>
                         )}
@@ -271,7 +286,7 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
                             >
-                                {   userStories &&
+                                {userStories &&
                                 userStories.us1.map((userStory: UserStoryInterface, index: number) => {
                                     return (
                                         <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
@@ -308,24 +323,24 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
                                 {
                                     userStories &&
                                     userStories.us2.map((userStory: UserStoryInterface, index: number) => {
-                                    return (
-                                        <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
-                                            {(provided) => (
-                                                <span
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                >
+                                        return (
+                                            <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
+                                                {(provided) => (
+                                                    <span
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
                         <UserStory story={userStory}
                                    handleEdit={() => handleStoryEdit(userStory)}
                                    handleShow={() => handleShowStory(userStory)}
                                    handleAfterDelete={handleDeleteStory}
                         />
                       </span>
-                                            )}
-                                        </Draggable>
-                                    );
-                                })}
+                                                )}
+                                            </Draggable>
+                                        );
+                                    })}
                                 {provided.placeholder}
                             </div>
                         )}
@@ -340,7 +355,7 @@ export const ExplorationBoard: React.FC<ExplorationBoardProps> = ({userStoriesDa
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
                             >
-                                {   userStories &&
+                                {userStories &&
                                 userStories.us3.map((userStory: UserStoryInterface, index: number) => {
                                     return (
                                         <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
