@@ -1,5 +1,5 @@
 import {SearchUserStoriesActionType} from '../action-types';
-import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 interface SearchUserStoriesAction {
     type: SearchUserStoriesActionType.SEARCH_USER_STORIES;

@@ -2,7 +2,7 @@ import React, {useEffect, useReducer} from "react";
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {UserStory} from "../../Cards/stories/userStory";
 import Grid from '@material-ui/core/Grid';
-import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 import {useActions} from "../../../hooks/useActions";
 import {UpdateStoryDialog} from "../../popup-dialog/stories-dialog/updateStoryDialog";
 import {ShowStoryDialog} from "../../popup-dialog/stories-dialog/showStoryDialog";

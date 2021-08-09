@@ -1,5 +1,5 @@
 import {LoadUserStoriesActionType} from '../action-types';
-import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 interface LoadUserStoriesAction {
     type: LoadUserStoriesActionType.LOAD_USER_STORIES;

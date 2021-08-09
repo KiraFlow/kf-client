@@ -1,5 +1,5 @@
 import {LoadPlaningStoriesActionType} from '../action-types';
-import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 interface LoadPlaningStoriesAction {
     type: LoadPlaningStoriesActionType.LOAD_PLANING_STORIES;

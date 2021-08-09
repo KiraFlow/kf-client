@@ -7,14 +7,34 @@ import IterationDialog from '../../components/popup-dialog/iteration-dialog/iter
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {useActions} from "../../hooks/useActions";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
-import {UserStoryInterface} from "../../components/Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../interfaces/UserStoryInterface";
 import './iteration-planing.css';
 import {PlaningBoard} from "../../components/Boards/iteration-planing/planingBoard";
 
 
+const useFetching = () => {
+
+    const {loadUserStories} = useActions();
+
+    useEffect(() => {
+        loadUserStories();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+}
 
 export const IterationPlaning = () => {
 
+    const [openCreateDialog, setOpenCreateDialog] = React.useState(false);
+
+    const handleCloseCreationModal = () => {
+        setOpenCreateDialog(false);
+    }
+
+    const {data, error, loading} = useTypedSelector((state: any) => state.loadUserStories);
+
+    useFetching();
 
   return (
     <>
@@ -28,7 +48,13 @@ export const IterationPlaning = () => {
         </Grid>
       </Grid>
 
-     <PlaningBoard />
+        {error && <h3>error</h3>}
+
+        {loading && <h3>loading user stories</h3>}
+
+        {!error && !loading &&
+            <PlaningBoard userStoriesData={data} />
+        }
     </>
   );
 };

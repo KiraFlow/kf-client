@@ -1,6 +1,6 @@
 import {SearchUserStoriesActionType} from '../action-types';
 import {SearchAction} from '../actions';
-import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 interface UserStoriesState {
     loading: boolean;

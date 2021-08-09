@@ -4,7 +4,7 @@ import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {UserStory} from "../../Cards/stories/userStory";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import {useActions} from "../../../hooks/useActions";
-import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 const useFetching = () => {
 
@@ -17,23 +17,23 @@ const useFetching = () => {
 }
 
 const statenUserStories = (data: UserStoryInterface[]) => {
-    const res = {'us0': [], 'us1': [], 'us2': [], 'us3': []};
+    const res = {'us0': [], 'us1': [], 'us2': [], 'us3': [], 'us4': []};
 
     if (data.length > 0) {
-        const maxListIndex = data.map(cell => cell.listIndex).reduce(function (prev, current) {
+        const maxListIndex = data.map(cell => cell.planing.listIndex).reduce(function (prev, current) {
             return (prev > current) ? prev : current
         });
 
         Array(maxListIndex + 1).fill(0).map((_, i) => {
             data
-                .filter(x => x.listIndex === i)
+                .filter(x => x.planing.listIndex === i)
                 .sort(function (a, b) {
-                    return (a.position > b.position ? 1 : -1)
+                    return (a.planing.position > b.planing.position ? 1 : -1)
                 })
                 .map(x => {
 
                     // @ts-ignore
-                    res['us' + x.listIndex].push(x);
+                    res['us' + x.planing.listIndex].push(x);
 
                 })
         });
@@ -43,140 +43,101 @@ const statenUserStories = (data: UserStoryInterface[]) => {
 
 
 
-const userStoriesDummyData: UserStoryInterface[] = [
-    {
-        _id: 'gary',
-        title: 'Gary Goodspeed',
-        position: 0,
-        listIndex: 0,
-        estimation: 1,
-        creationDate: new Date(),
-        description: 'de'
+interface PlaningBoardProps {
+    userStoriesData: UserStoryInterface[];
+}
 
-    },
-    {
-        _id: 'cato',
-        title: 'Little Cato',
-        position: 1,
-        listIndex: 0,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
+export const PlaningBoard: React.FC<PlaningBoardProps> = ({
+                                                              userStoriesData
+                                                              }) => {
+    const [userStories, setUserStories] = React.useState<any>();
 
-    },
-    {
-        _id: 'kvn',
-        title: 'KVN',
-        position: 2,
-        listIndex: 0,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
+    useEffect(() => {
+        const us = statenUserStories(userStoriesData);
+        setUserStories(us);
 
-    },
-    {
-        _id: 'mooncake',
-        title: 'Mooncake',
-        position: 3,
-        listIndex: 0,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    },
-    {
-        _id: 'hello',
-        title: 'hello now',
-        position: 4,
-        listIndex: 0,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
+    const {updateBoardAction} = useActions();
 
-    },
-    {
-        _id: 'brow',
-        title: 'brown',
-        position: 0,
-        listIndex: 1,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
-
-
-    },
-    {
-        _id: 'cow',
-        title: 'cow',
-        position: 1,
-        listIndex: 1,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
-
+    const LIST_INDEX = {
+        'us0': 0,
+        'us1': 1,
+        'us2': 2,
+        'us3': 3,
+        'us4': 4
     }
-
-];
-
-
-const whatever: UserStoryInterface[] = [
-
-    {
-        _id: 'sixsix',
-        title: 'KVN',
-        position: 2,
-        listIndex: 0,
-        creationDate: new Date(),
-        estimation: 1,
-        description: 'de'
-
-    }
-];
-
-export const PlaningBoard: React.FC = () => {
-
-    const userStories = statenUserStories(userStoriesDummyData);
-    const [state, setState] = useState({
-        'usx': whatever,
-        'us0': userStories['us0'],
-        'us1': userStories['us1'],
-        'us2': userStories['us2'],
-        'us3': userStories['us3']
-    });
-
-    const {data, error, loading} = useTypedSelector((state: any) => state.loadUserStories);
-    useFetching();
-
-
 
     function handleOnDragEnd(result: any) {
 
         if (!result.destination) return;
         const destination = result.destination;
         const source = result.source;
-
+        let board = null;
         if (destination.droppableId === source.droppableId) {
             // @ts-ignore
-            const sourceItems = Array.from(state[source.droppableId]);
+            const sourceItems = Array.from(userStories[source.droppableId]);
+
             const [sourceCell] = sourceItems.splice(result.source.index, 1);
             sourceItems.splice(result.destination.index, 0, sourceCell);
-            setState(state => ({...state, [destination.droppableId]: sourceItems}))
+
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+                story.planing.position = position
+            });
+
+            userStories[source.droppableId] = sourceItems;
+
+            setUserStories(userStories);
+
+            board = sourceItems;
+            updateBoardAction(board);
+
         } else {
             // @ts-ignore
-            const sourceItems = Array.from(state[source.droppableId]);
+            const sourceItems = Array.from(userStories[source.droppableId]);
             const [sourceCell] = sourceItems.splice(result.source.index, 1);
 
             // @ts-ignore
-            const destinationItems = Array.from(state[destination.droppableId]);
+            const destinationItems = Array.from(userStories[destination.droppableId]);
             destinationItems.splice(destination.index, 0, sourceCell);
-            setState(state => ({
-                ...state,
+
+            board = ({
+                ...userStories,
                 [source.droppableId]: sourceItems,
                 [destination.droppableId]: destinationItems
-            }));
-        }
+            });
 
+            userStories[source.droppableId] = sourceItems;
+            userStories[destination.droppableId] = destinationItems;
+            setUserStories(userStories);
+
+            // @ts-ignore
+            sourceItems.forEach(function (story: UserStoryInterface, position: number) {
+                story.position = position
+            });
+            try {
+                // @ts-ignore
+                const destinationList = LIST_INDEX[destination.droppableId]
+
+                // @ts-ignore
+                destinationItems.forEach(function (story: UserStoryInterface, position: number) {
+                    story.planing.position = position
+                    story.planing.listIndex = destinationList
+                });
+
+                board = sourceItems.concat(destinationItems);
+
+                if (!board) return;
+                updateBoardAction(board);
+
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
+
 
 
     const handleStoryEdit = (userStory: UserStoryInterface) => {
@@ -200,14 +161,16 @@ export const PlaningBoard: React.FC = () => {
                     </div>
 
                     <div className={'stories-list ustories'}>
-                        <Droppable droppableId="usx">
+                        <Droppable droppableId="us0">
                             {(provided) => (
                                 <div
-                                    className="usx drop-x"
+                                    className="us0 drop-x"
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                 >
-                                    {state.usx.map((userStory: UserStoryInterface, index: number) => {
+                                    {
+                                        userStories &&
+                                        userStories.us0.map((userStory: UserStoryInterface, index: number) => {
                                         return (
                                             <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                 {(provided) => (
@@ -253,14 +216,16 @@ export const PlaningBoard: React.FC = () => {
                             xs={12}
                             className={'left-block drop'}
                         >
-                            <Droppable droppableId="us0">
+                            <Droppable droppableId="us1">
                                 {(provided) => (
                                     <div
-                                        className="us0 drop-v"
+                                        className="us1 drop-v"
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
-                                        {state.us0.map((userStory: UserStoryInterface, index: number) => {
+                                        {
+                                            userStories &&
+                                            userStories.us1.map((userStory: UserStoryInterface, index: number) => {
                                             return (
                                                 <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                     {(provided) => (
@@ -298,14 +263,16 @@ export const PlaningBoard: React.FC = () => {
                             xs={12}
                             className={'right-block drop'}
                         >
-                            <Droppable droppableId="us1">
+                            <Droppable droppableId="us2">
                                 {(provided) => (
                                     <div
-                                        className="us1 drop-v"
+                                        className="us2 drop-v"
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
-                                        {state.us1.map((userStory: UserStoryInterface, index: number) => {
+                                        {
+                                            userStories &&
+                                            userStories.us2.map((userStory: UserStoryInterface, index: number) => {
                                             return (
                                                 <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                     {(provided) => (
@@ -344,14 +311,16 @@ export const PlaningBoard: React.FC = () => {
                             xs={12}
                             className={'up-block drop'}
                         >
-                            <Droppable droppableId="us2">
+                            <Droppable droppableId="us3">
                                 {(provided) => (
                                     <div
-                                        className="us2 under-drop drop-v"
+                                        className="us3 under-drop drop-v"
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
-                                        {state.us2.map((userStory: UserStoryInterface, index: number) => {
+                                        {
+                                            userStories &&
+                                            userStories.us3.map((userStory: UserStoryInterface, index: number) => {
                                             return (
                                                 <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                     {(provided) => (
@@ -387,14 +356,16 @@ export const PlaningBoard: React.FC = () => {
                             xs={12}
                             className={'down-block drop'}
                         >
-                            <Droppable droppableId="us3">
+                            <Droppable droppableId="us4">
                                 {(provided) => (
                                     <div
-                                        className="us3 under-drop drop-v"
+                                        className="us4 under-drop drop-v"
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
-                                        {state.us3.map((userStory: UserStoryInterface, index: number) => {
+                                        {
+                                            userStories &&
+                                            userStories.us4.map((userStory: UserStoryInterface, index: number) => {
                                             return (
                                                 <Draggable key={userStory._id} draggableId={userStory._id} index={index}>
                                                     {(provided) => (
@@ -424,3 +395,4 @@ export const PlaningBoard: React.FC = () => {
         </Grid>
     );
 }
+

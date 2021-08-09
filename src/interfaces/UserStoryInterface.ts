@@ -6,4 +6,8 @@ export interface UserStoryInterface {
     description: string;
     estimation: number;
     creationDate: Date;
+    planing: {
+        listIndex: number;
+        position: number;
+    }
 }

@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import './userStory.css';
-import {UserStoryInterface} from "./UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 import axios from "../../../axios";
 
 const useStyles = makeStyles((theme) => ({

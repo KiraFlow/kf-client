@@ -16,7 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import './storyDialog.css';
 import axios from "../../../axios";
-import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -72,7 +72,7 @@ const DialogActions = withStyles((theme: Theme) => ({
 interface StoryDialogProps {
     openCreationModal: boolean;
     handleCloseCreationModal: () => void;
-    handleAfterCreation: (us: { estimation: number; listIndex: number; description: string; _id: string; position: number; creationDate: Date; title: string }) => void;
+    handleAfterCreation: (us: { estimation: number; listIndex: number; description: string; _id: string; position: number; creationDate: Date; title: string; planing: { listIndex: number; position: number; } }) => void;
 }
 
 export const StoryDialog: React.FC<StoryDialogProps> = ({
@@ -99,18 +99,23 @@ export const StoryDialog: React.FC<StoryDialogProps> = ({
             position: 0,
             title: title,
             description: description,
-            estimation: estimation
+            estimation: estimation,
+            planing: {
+                listIndex: 0,
+                position: 0
+            }
         };
 
         try {
-            const {title, description, estimation, creationDate, listIndex, position} = us;
+            const {title, description, estimation, creationDate, listIndex, position, planing} = us;
             await axios.post('/exploration/create', JSON.stringify({
                 title,
                 description,
                 estimation,
                 creationDate,
                 listIndex,
-                position
+                position,
+                planing
             }), {
                 headers: {
                     'Content-Type': 'application/json',

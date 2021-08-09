@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import './storyDialog.css';
-import {UserStoryInterface} from "../../Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 import axios from '../../../axios';
 
 const styles = (theme: Theme) =>
@@ -73,7 +73,7 @@ interface UpdateStoryProps {
     isOpen: boolean;
     story: UserStoryInterface;
     handleClose: () => void;
-    handleAfterUpdate: (us: { estimation: number; listIndex: number; description: string; _id: string; position: number; creationDate: Date; title: string }) => void;
+    handleAfterUpdate: (us: { estimation: number; listIndex: number; description: string; _id: string; position: number; creationDate: Date; title: string; planing: { listIndex: number; position: number; } }) => void;
 
 }
 
@@ -92,7 +92,11 @@ export const UpdateStoryDialog: React.FC<UpdateStoryProps> = ({isOpen, story, ha
             position: story.position,
             title: title,
             description: description,
-            estimation: estimation
+            estimation: estimation,
+            planing: {
+                listIndex: story.planing.listIndex,
+                position: story.planing.position
+            }
         }
 
         try {

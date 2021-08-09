@@ -1,6 +1,6 @@
 import {LoadPlaningStoriesActionType} from '../action-types';
 import {LoadAction} from '../actions';
-import {UserStoryInterface} from "../../../components/Cards/stories/UserStoryInterface";
+import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
 interface PlaningStoriesState {
     loading: boolean;
