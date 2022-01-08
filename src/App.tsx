@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Homepage } from './pages/homepage/homepage';
 import {Exploration} from './pages/continues-exploration/exploration';
 import {IterationPlaning} from './pages/iteration-planing/iteration-planing';
+import {Kanban} from './pages/kanban/kanban';
 import { Layout } from './components/layout/layout';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 
@@ -34,6 +35,7 @@ export const App = () => {
           <Route exact path="/" component={Homepage} />
           <Route exact path="/exploration" component={Exploration} />
           <Route exact path="/planing" component={IterationPlaning} />
+          <Route exact path="/kanban" component={Kanban} />
         </Router>
       </Layout>
     </ThemeProvider>

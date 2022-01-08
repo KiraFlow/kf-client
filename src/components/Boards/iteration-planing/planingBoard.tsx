@@ -6,15 +6,6 @@ import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import {useActions} from "../../../hooks/useActions";
 import {UserStoryInterface} from "../../../interfaces/UserStoryInterface";
 
-const useFetching = () => {
-
-    const {loadUserStories} = useActions();
-
-    useEffect(() => {
-        loadUserStories();
-
-    }, []);
-}
 
 const statenUserStories = (data: UserStoryInterface[]) => {
     const res = {'us0': [], 'us1': [], 'us2': [], 'us3': [], 'us4': []};
@@ -51,10 +42,15 @@ export const PlaningBoard: React.FC<PlaningBoardProps> = ({
                                                               userStoriesData
                                                               }) => {
     const [userStories, setUserStories] = React.useState<any>();
+    const [velocity, setVelocity] = React.useState<number>();
 
     useEffect(() => {
         const us = statenUserStories(userStoriesData);
         setUserStories(us);
+        // @ts-ignore
+        const velocity =  userStoriesData.filter((x: UserStoryInterface) => x.planing.listIndex !== 0).map((x: UserStoryInterface) => x.estimation).reduce( (previousValue, currentValue) => previousValue + currentValue, 0);
+
+        setVelocity(velocity);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -75,6 +71,7 @@ export const PlaningBoard: React.FC<PlaningBoardProps> = ({
         const destination = result.destination;
         const source = result.source;
         let board = null;
+
         if (destination.droppableId === source.droppableId) {
             // @ts-ignore
             const sourceItems = Array.from(userStories[source.droppableId]);
@@ -93,6 +90,10 @@ export const PlaningBoard: React.FC<PlaningBoardProps> = ({
 
             board = sourceItems;
             updateBoardAction(board);
+            // @ts-ignore
+            const velocity =  board.filter((x: UserStoryInterface) => x.planing.listIndex !== 0).map((x: UserStoryInterface) => x.estimation).reduce( (previousValue, currentValue) => previousValue + currentValue, 0);
+
+            setVelocity(velocity);
 
         } else {
             // @ts-ignore
@@ -132,6 +133,19 @@ export const PlaningBoard: React.FC<PlaningBoardProps> = ({
                 if (!board) return;
                 updateBoardAction(board);
 
+                let velocityUs: UserStoryInterface[] = [];
+                for (var key in userStories) {
+                    var us = userStories[key];
+                    if(us.length !== 0){
+                        velocityUs.push(us)
+                    }
+                }
+
+                // @ts-ignore
+                const velocity =  velocityUs.flat().filter((x: UserStoryInterface) => x.planing.listIndex !== 0).map((x: UserStoryInterface) => x.estimation).reduce( (previousValue, currentValue) => previousValue + currentValue, 0);
+
+                setVelocity(velocity);
+
             } catch (e) {
                 console.log(e);
             }
@@ -157,7 +171,7 @@ export const PlaningBoard: React.FC<PlaningBoardProps> = ({
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Grid item xl={4} lg={4} md={4} sm={12} xs={12}>
                     <div className={'tasks'}>
-                        <h5 className={'task-header'}>User Stories (2)</h5>
+                        <h5 className={'task-header'}>User Stories ({userStories && userStories.us0.length })</h5>
                     </div>
 
                     <div className={'stories-list ustories'}>
@@ -198,7 +212,7 @@ export const PlaningBoard: React.FC<PlaningBoardProps> = ({
 
                 <Grid item xl={8} lg={8} md={8} sm={12} xs={12} className={'usg'}>
                     <div className={'tasks'}>
-                        <h5 className={'task-header'}>Velocity: 0</h5>
+                        <h5 className={'task-header'}>Velocity: {userStories && velocity}</h5>
                     </div>
                     <div className={'tasks tasksDrag d-md-none'}>
                         <h5 className={'mt-0 task-header'}>High Value / High Cost</h5>

@@ -40,7 +40,7 @@ export const IterationPlaning = () => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <Typography variant="h6">Continues Exploration</Typography>
+          <Typography variant="h6">Iteration Planing</Typography>
         </Grid>
 
         <Grid item xs={6}>
